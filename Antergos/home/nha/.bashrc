@@ -57,7 +57,7 @@ function extract() {
                         *.tar.bz2)   tar xjf $1   ;;
                         *.tar.gz)    tar xzf $1   ;;
                         *.bz2)       bunzip2 $1   ;;
-                        *.rar)       unrar x $1     ;;
+                        *.rar)       unrar x $1   ;;
                         *.gz)        gunzip $1    ;;
                         *.tar)       tar xf $1    ;;
                         *.tbz2)      tar xjf $1   ;;
@@ -67,11 +67,17 @@ function extract() {
                         *.7z)        7z x $1      ;;
                         *)           echo "'$1' cannot be extracted via extract()" ;;
                 esac
-        else
+        elif [ -d "$1" ]; then
+		if [ $(ls $1/*.rar 2> /dev/null) ]; then
+			echo "this is a rarpack. extracting $(ls $1/*.rar)"
+			unrar x $1/*.rar
+		else
+			echo "'$1' cannot be extracted via extract()"
+		fi
+	else
                 echo "'$1' is not a valid file"
         fi
 }
-
 # make directory and move into it
 function mkcdr {
         mkdir -p -v $1
